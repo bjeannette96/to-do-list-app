@@ -1,0 +1,248 @@
+* {
+    margin: 0;
+    /* effacera toutes les marges par défaut de tous les éléments de la page*/
+    padding: 0;
+    /*tous les éléments de la page web auront leur marge intérieure (l'espace entre leur contenu et leur bordure) définie à zéro pixel*/
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+    /*l'élément ne dépasse jamais son conteneur à cause d'un ajout de rembourrage ou de bordure trop grand. */
+}
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    /*100vh: correspond à 100% de la hauteur de la fenêtre visible. */
+    background: linear-gradient(135deg, rgb(205, 126, 117), #98f298);
+    /*(angle,left color,right color*/
+    padding: 10px;
+    /*l'espace de remplissage à l'intérieur d'un élément, entre son contenu et sa bordure*/
+    justify-content: center;
+}
+
+.todo-bloc {
+    display: flex;
+    padding: 15px;
+    border: dashed grey;
+    justify-content: space-between;
+    width: auto;
+}
+
+.completedTask {
+    width: 300px;
+    max-width: 200px;
+    min-height: 20%;
+    background: #fff;
+    margin: 0px;
+    /* (top, left&right, bottom) */
+    padding: 0px 10px;
+    border: dashed rgb(60, 50, 199);
+    /* A ENLEVER*/
+}
+
+.completedTask h3 {
+    color: rgb(32, 12, 10);
+    padding: 0 30% 0 30%;
+    display: flex;
+    /*pour aligner l'icone et le texte*/
+    align-items: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border: dashed green;
+    /* A ENLEVER*/
+}
+
+.completedTask ul li {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.todo-app {
+    width: 100%;
+    max-width: 780px;
+    background: #fff;
+    margin: 100px auto 20px;
+    /* (top, left&right, bottom) */
+    padding: 40px 30px 70px;
+    border-radius: 15px;
+    border: dashed red;
+    /* A ENLEVER*/
+}
+
+.todo-app h2 {
+    color: rgb(32, 12, 10);
+    display: flex;
+    /*pour aligner l'icone et le texte*/
+    align-items: center;
+    margin-bottom: 20px;
+    border: dashed orange;
+    /* A ENLEVER*/
+}
+
+.todo-app h2 img {
+    width: 30px;
+    /*contrôle la taille de l'icone*/
+    margin-left: 10px;
+    /*alignement à gauche*/
+}
+
+.taskToAdd {
+    border: dashed rgba(72, 201, 236, 0.862);
+
+    overflow-wrap: break-word;
+    max-width: 480px;
+    padding: 20px;
+}
+
+.row {
+    width: 400px;
+    /*aligne les éléments de .row par défaut en ligne (axe principal), côte à côte*/
+    display: flex;
+    /*alignement sur l'axe secondaire (perpendiculaire)*/
+    align-items: center;
+    /*alignement sur l'axe secondaire des éléments: répartie l'espace entre le input et le bouton*/
+    justify-content: space-between;
+    background: #edeef0;
+    /*le background du input+bouton sera grise!!*/
+    border-radius: 30px;
+    padding-left: 30px;
+    margin-bottom: 25px;
+    border: dashed rgb(17, 228, 73);
+    /* A ENLEVER*/
+}
+
+input {
+    /*l’input prend tout l’espace disponible dans la ligne après avoir placé le bouton*/
+    flex: 1;
+    /*supprimer la bordure par défaut*/
+    border: none;
+    /*supprimer le contour lumineux (indication visuelle de focus)*/
+    outline: none;
+    background: transparent;
+    /*ajouter de l’espace à l’intérieur du champ (entre le texte et ses bords). Sans padding, le texte serait collé au bord gauche du champ*/
+    padding: 10px;
+}
+
+button {
+    border: none;
+    outline: none;
+    padding: 16px 50px;
+    background: #eb6657;
+    color: #fff;
+    /*couleur de la police du bouton*/
+    font-size: 16px;
+    /*le curseur devient une 'tite main sur le bouton*/
+    cursor: pointer;
+    border-radius: 40px;
+}
+
+.taskList {
+    border: dashed rgb(197, 228, 44);
+    /* A ENLEVER*/
+}
+
+ul li {
+    list-style: none;
+    /*enlève les puces */
+    font-size: 17px;
+    padding: 12px 50px 12px 50px;
+    /*empèche la sélection du texte*/
+    user-select: none;
+    cursor: pointer;
+    /*L’espace initial de li est conservé (comme un fantôme); sert de repère à ses enfants en absolute*/
+    position: relative;
+    overflow-wrap: break-word;
+}
+
+/*::before cré une boite virtuelle dans laquelle sera stockée l'image*/
+ul li::before {
+    /*maintient l'existence de la boite virtuelle*/
+    content: '';
+    /*se positionne par rapport à son parent avec 'relative', pas par rapport à toute la page*/
+    position: absolute;
+    /*Le cercle aura donc une taille de 28 px par 28 px.*/
+    height: 28px;
+    width: 28px;
+    /*Transforme le carré en cercle parfait*/
+    border-radius: 50%;
+    /*Définit l’image de fond du cercle*/
+    background-image: url(images/unchecked.png);
+    /*L’image s’ajuste pour remplir entièrement le cercle sans déformation*/
+    background-size: cover;
+    /*L’image est centrée dans le cercle*/
+    background-position: center;
+    top: 12px;
+    left: 8px;
+}
+
+ul li.checked {
+    color: #555;
+    /*barre le texte avec une ligne horizontale au milieu*/
+    text-decoration: line-through;
+}
+
+ul li.checked::before {
+    /*lorsque la task sera checked l'img dans la boite virtuelle sera checked.png*/
+    background-image: url(images/checked.png);
+}
+
+/* Nouvelle coche verte dans le bloc Done */
+ul li.checked::before {
+    background-image: url(images/checked-green.png);
+    /* Assure-toi d'avoir une petite image 'checked-green.png' */
+    background-size: 26px 26px;
+    /* Taille plus petite de la coche */
+    width: 20px;
+    /* taille de la coche */
+    height: 20px;
+    /* taille de la coche */
+    top: 12px;
+    /* reste au même endroit */
+    left: 8px;
+    /* reste au même endroit */
+}
+
+
+
+ul li span {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
+    color: #555;
+    /*controle l'interligne (hauteur de ligne)*/
+    line-height: 40px;
+    text-align: center;
+    /*le background de '×' est circulaire*/
+    border-radius: 50%;
+
+}
+
+/*la couleur du background de '×' change lorsque le curseur la survole*/
+ul li span:hover {
+    background: #edeef0;
+}
+
+.completedTask ul li span {
+    position: absolute;
+    right: 10px;
+    top: 11px;
+    width: 21px;
+    height: 21px;
+    font-size: 18px;
+    color: #555;
+    /*controle l'interligne (hauteur de ligne)*/
+    line-height: 19px;
+    text-align: center;
+    /*le background de '×' est circulaire*/
+    border-radius: 50%;
+
+}
+
+/* 
+voici mon code css:
+
+je veux que .completedTask et 
+
+ */

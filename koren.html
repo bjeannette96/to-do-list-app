@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do list</title>
+    <link rel="stylesheet" type="text/css" href="krassa.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="todo-app">
+            <h2>To-Do List <img src="images/icon.png" alt="icône"></h2>
+            <div class="todo-bloc">
+                <div class="completedTask">
+                    <h3>Done</h3>
+                    <ul id="done-list"></ul>
+                </div>
+                <div class="taskToAdd">
+                    <div class="row">
+                        <input type="text" id="input-box" placeholder="Add your task">
+                        <button onclick="addTask()">Add</button>
+                        <!-- l'attribut 'onclick' appelle une fonction JS lorsqu'on clique sur le bouton -->
+                    </div class="taskList">
+
+                    <ul id="list-container"> <!--une liste à puces non ordonnée-->
+                        <!-- <li class="checked">Task 1</li>
+                <li>Task 2</li>
+                <li>Task 3</li> -->
+                    </ul>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <script src="kontrol.js"></script>
+
+</body>
+
+</html>
