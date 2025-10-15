@@ -4,70 +4,96 @@ const doneList = document.getElementById("done-list");
 
 
 function addTask() {
-    //Vérifie si l'utilisateur a écrit quelque chose ['.trim()' supprime les espaces blancs (espaces, tabulations, sauts de ligne) du début et de la fin d'une chaîne de caractères 
-    if (inputBox.value.trim() === '') {
+    // .trim() les espaces vides + vérifie le input
+    const text = inputBox.value.trim();
+    if (text === '') {
         showWarning("⚠️ Please write something!");
-        return; // Stoppe ici pour éviter de créer une tâche vide
+        return;
     }
 
-    /*Crée dynamiquement un nouvel élément <li> (liste) en mémoire; il n’est pas encore dans la page
-     'document.createElement(" ")' crée un nouvel élément HTML avec le nom de balise spécifié en argument ("li") */
-    let li = document.createElement("li");
-    /*.innerHTML récupère le contenu de inputBox et le stock dans le code html entre <li> </li> */
-    li.innerHTML = inputBox.value;
+    // Récupère le texte et le libellé de la catégorie sélectionnée
+    const categorySelect = document.getElementById("category");
+    const categoryText = categorySelect.options[categorySelect.selectedIndex].text;
 
-    /*un élément <span> est créé entre <li> </li>; visuellement on a <li> Ma tâche <span> </span> </li>; '×' sera à droite de la tâche*/
-    let span = document.createElement("span");
-    /* .innerHTML insère '×' dans le <span> 
-    \u00d7 est le code du symbole '×' de la multiplication */
+    // crée le li 
+    const li = document.createElement("li");
+
+    // texte de la tâche 
+    const textNode = document.createTextNode(text + "   "); // ajoute un petit espace avant la catégorie
+    li.appendChild(textNode);
+
+    // <small> pour la catégorie entre parenthèses
+    const cat = document.createElement("small");
+    cat.className = "task-category";
+    cat.textContent = `(${categoryText})`;
+    li.appendChild(cat);
+
+    // bouton supprimer (la croix ×)
+    const span = document.createElement("span");
     span.innerHTML = "\u00d7";
-    /*Ajoute '×' à l’intérieur du <li>. Visuellement : <li> Ma tâche <span> × </span> </li> */
     li.appendChild(span);
 
-    /* la variable li sera affichée dans le bloc <ul id="list-container"> (ajoute cet élément dans la liste des taches) */
+    // ajoute le <li> à la liste
     listContainer.appendChild(li);
 
-    span.addEventListener("click", function () {
-        li.remove();
-        saveData();
-    });
-
-    /* '.focus()' remets le focus sur l’input . Comme ça, plus besoin de cliquer dans le champ avant d'écrire*/
+    // focus / reset input
     inputBox.focus();
-    inputBox.value = ""; /*le input se vide une fois qu'on appui sur le bouton "Add" */
+    inputBox.value = "";
+
     saveData();
 }
 
+
+
+let __warningTimeout = null;
+let __warningFadeTimeout = null;
+
 function showWarning(msg) {
-    const warning = document.createElement("p"); //on crée un <p> pour afficher le msg d'erreur
-    warning.textContent = msg; //on met dans le <p> le message
+    // Cherche si le warning existe déjà
+    let warning = document.getElementById("app-warning");
 
-    //ajoute du style au message d'erreur (CSS directement dans le JS)
-    warning.style.color = 'white';  // font color
-    warning.style.background = '#eb6657';  // background color
-    warning.style.padding = '10px 20px';   //marges interne du <p>
-    warning.style.borderRadius = '10px';
-    warning.style.textAlign = 'center';  // alignement horizontal du texte 
-    warning.style.fontSize = '14px';
-    warning.style.marginTop = '10px';
-    warning.style.transition = 'opacity 0.5s ease';
+    // Si pas existant, le créer et l'attacher à .todo-app
+    if (!warning) {
+        warning = document.createElement("p");
+        warning.id = "app-warning";
+        // rôle/accessibilité
+        warning.setAttribute("role", "alert");
+        warning.setAttribute("aria-live", "assertive");
+        // on attache au container .todo-app (position:absolute géré en CSS)
+        const app = document.querySelector(".todo-app");
+        app.appendChild(warning);
+    }
 
+    // Mettre à jour le texte
+    warning.textContent = msg;
 
-    /*querySelector() : méthode du DOM qui accepte un sélecteur CSS 
-    (comme .classe, #id, div > p, etc.) et retourne le premier élément 
-    qui correspond à ce sélecteur.
-    Si aucun élément trouvé → retourne null */
-    document.querySelector(".todo-app").appendChild(warning);
+    // S'assurer que le message est visible (classe .visible gère l'opacité)
+    warning.classList.add("visible");
 
-    // la fct attend 2s, puis réduit l’opacité du message d'erreur (déclencher le fondu)
-    setTimeout(() => {
-        // <p> devient invisible progressivement
-        warning.style.opacity = '0';  // la transparence du <p> --> opacity: 1 (entièrement opaque) opacity: 0 (totalement transparent (invisible))
-        setTimeout(() => warning.remove(), 500); // on attend 0.5s la fin de l’animation de fondu
+    // Reset des timeouts si l'utilisateur spamme le bouton
+    if (__warningTimeout) {
+        clearTimeout(__warningTimeout);
+        __warningTimeout = null;
+    }
+    if (__warningFadeTimeout) {
+        clearTimeout(__warningFadeTimeout);
+        __warningFadeTimeout = null;
+    }
+
+    // Après 2s: démarrer la transition de disparition (opacity -> 0)
+    __warningTimeout = setTimeout(() => {
+        warning.classList.remove("visible"); // start fade-out (CSS transition)
+        // Après 0.5s (durée de la transition), on supprime l'élément pour nettoyer le DOM
+        __warningFadeTimeout = setTimeout(() => {
+            // Ne supprime que si la classe visible n'a pas été remise entre temps
+            if (!warning.classList.contains("visible")) {
+                warning.remove();
+            }
+            __warningFadeTimeout = null;
+            __warningTimeout = null;
+        }, 500);
     }, 2000);
 }
-
-
 
 listContainer.addEventListener("click", function (e) {
     if (e.target.tagName === "LI") {
@@ -128,52 +154,7 @@ showTask();
 
 
 
+/**
+ * 
+ */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-j'ai pas compris comment L’alert() interrompt le flux et est intrusive
-
-quel est l'avantage de créer dynamiquement un nouvel élément <li> (liste) en mémoire? pourquoi ne pas créer dès le départ des <li>?
-
-explique moi la notion de XSS / injection
-
-explique encore plus en details en quoi 'textContent' est mieux que 'innerHTML' dans mon code. comment savoir le quel utiliser (explique la bonne habitude dont tu parles)? c'est quoi 'sanitise'? comment corriger mon code?
-
-je n'ai toujours pas compris ce qui se passe avec 'listContainer.appendChild(li);'... pourquoi on ne voit <li> qu'ici? pourquoi la liste s'actualise?c'est l'evenement par defaut?
-
-je n'ai pas compris l'interraction au niveau de 'li.appendChild(span);' et c'est quoi 'event delegation'?
-décortique moi aussi 'e.target.tagName': c'est quoi 'target', c'est quoi 'tagName'...?
-
-décortique moi la ligne 'e.target.classList.toggle("checked");': c'est quoi 'target', 'classList', 'toggle'... qu'est ce qui se passe ici?  
-
-explique plus en détails ce que fait la fonction 'saveData()'. ça veut dire quoi 'persistent entre rechargements de page'? j' ai pas compris le problème avec cette fonction.pour quoi ce serait 'difficile à manipuler (ex : filtrer tâches, marquer comme faites côté données)'. explique plus en détails ta proposition d'amélioration (+ donne la liste des notions que je dois comprendre pour ça)
-
-je n'ai pas du tout compris la partie 'listContainer.addEventListener("click", function (e) ...': qu'est ce qui se passe ici? c'est quoi '.addEventListener()' et comment/quand l'utiliser? c'est quoi cette histoire de parent??
-
-est ce qu'en manipulant le stockage de données avec JSON je rentre un peu dans du backend ou bien en frontend on le fait aussi souvent? et en stockant dans JSON je pourrai manipuler les taches, par exemple restaurer une tache supprimée, stocker la liste de taches exécutée à une date donnée (si j'ajoute un truc d'enrégistrement comme dans les vraies applis to-do list), pas vrai?  
-
-comment insérer 'inputBox.addEventListener('keydown'...' dans le code? j'ai pas pu
-
-explique en détail ton idée pour éviter les doublons et limiter la longueur. et si je veux permettre à l'utilisateur d'écrire de longues taches sur deux lignes je fais comment? 
-
-explique moi en details la Mise à jour done côté données dont tu parle, j'ai rien compris.
-
-
-
-*/

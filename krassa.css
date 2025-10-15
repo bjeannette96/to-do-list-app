@@ -22,49 +22,93 @@
 .todo-bloc {
     display: flex;
     padding: 15px;
-    border: dashed grey;
     justify-content: space-between;
     width: auto;
+
+    /* border: dashed grey; */
 }
 
+/* container principal : header + liste */
 .completedTask {
-    width: 300px;
-    max-width: 200px;
-    min-height: 20%;
-    background: #fff;
-    margin: 0px;
-    /* (top, left&right, bottom) */
-    padding: 0px 10px;
-    border: dashed rgb(60, 50, 199);
-    /* A ENLEVER*/
-}
-
-.completedTask h3 {
-    color: rgb(32, 12, 10);
-    padding: 0 30% 0 30%;
     display: flex;
-    /*pour aligner l'icone et le texte*/
-    align-items: center;
-    margin-bottom: 20px;
-    margin-top: 20px;
-    border: dashed green;
-    /* A ENLEVER*/
+    flex-direction: column;
+    align-items: stretch;
+    /* la liste prenne toute la largeur */
+    width: 230px;
+    height: 420px;
+    background: #fff;
+    margin: 0;
+    padding: 0 10px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    border-radius: 20px;
+    overflow: hidden;
+    /* empêche le bloc entier de scroller */
+    position: relative;
+    font-size: 12px;
+
 }
 
-.completedTask ul li {
-    font-size: 12px;
-    opacity: 0.8;
+/* header fixe */
+.done-header {
+    flex: 0 0 auto;
+    /* hauteur fixe */
+    padding: 12px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
 }
+
+/* style du titre */
+.done-header h3 {
+    margin: 0;
+    padding: 6px 14px;
+    font-size: 14px;
+    color: rgb(32, 12, 10);
+    border-radius: 10px;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.06) inset, 0 2px 6px rgba(0, 0, 0, 0.06);
+    background: #fff;
+}
+
+/* wrapper scrollable : c'est LE seul élément scrollable */
+.done-list {
+    flex: 1 1 auto;
+    /* prend l'espace restant */
+    overflow-y: auto;
+    padding: 8px 4px 12px;
+    /* espace interne pour les li */
+    overflow-x: hidden;
+}
+
+/*assure que le <ul> occupe bien la largeur */
+.done-list ul {
+    margin: 0;
+    padding: 0px;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.done-list ul li {
+    word-wrap: break-word;
+    /* casse les mots trop longs */
+    overflow-wrap: anywhere;
+    /* permet de couper si besoin */
+    font-size: 11px;
+}
+
 
 .todo-app {
     width: 100%;
+    height: 600px;
     max-width: 780px;
     background: #fff;
     margin: 100px auto 20px;
     /* (top, left&right, bottom) */
-    padding: 40px 30px 70px;
+    padding: 40px 30px 40px;
     border-radius: 15px;
-    border: dashed red;
+    position: relative;
+    /* border: dashed red; */
     /* A ENLEVER*/
 }
 
@@ -74,7 +118,7 @@
     /*pour aligner l'icone et le texte*/
     align-items: center;
     margin-bottom: 20px;
-    border: dashed orange;
+    /* border: dashed orange; */
     /* A ENLEVER*/
 }
 
@@ -85,16 +129,47 @@
     /*alignement à gauche*/
 }
 
-.taskToAdd {
-    border: dashed rgba(72, 201, 236, 0.862);
-
-    overflow-wrap: break-word;
-    max-width: 480px;
-    padding: 20px;
+/*s'ajoute dans le JS*/
+#app-warning {
+    position: absolute;
+    top: 45px;
+    right: 35px;
+    background: #eb6657;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    opacity: 0;
+    /* invisible par défaut */
+    transform: translateY(-6px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    z-index: 50;
+    pointer-events: none;
+    white-space: nowrap;
 }
 
+/*s'ajoute dans le js*/
+#app-warning.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+.taskToAdd {
+    overflow: hidden;
+    overflow-wrap: break-word;
+    width: 70%;
+    padding: 20px;
+
+    /* border: dashed rgba(72, 201, 236, 0.862); */
+    /*A ENLEVER*/
+}
+
+
 .row {
-    width: 400px;
+    width: 100%;
     /*aligne les éléments de .row par défaut en ligne (axe principal), côte à côte*/
     display: flex;
     /*alignement sur l'axe secondaire (perpendiculaire)*/
@@ -104,9 +179,9 @@
     background: #edeef0;
     /*le background du input+bouton sera grise!!*/
     border-radius: 30px;
-    padding-left: 30px;
-    margin-bottom: 25px;
-    border: dashed rgb(17, 228, 73);
+    padding: 8px 18px;
+    margin-bottom: 4px;
+    /* border: dashed rgb(17, 228, 73); */
     /* A ENLEVER*/
 }
 
@@ -119,38 +194,84 @@ input {
     outline: none;
     background: transparent;
     /*ajouter de l’espace à l’intérieur du champ (entre le texte et ses bords). Sans padding, le texte serait collé au bord gauche du champ*/
-    padding: 10px;
+    padding: 5px;
+    font-size: 12px;
 }
 
 button {
+    width: 100%;
     border: none;
     outline: none;
-    padding: 16px 50px;
+    padding: 2px 50px;
+    margin-bottom: 20px;
     background: #eb6657;
     color: #fff;
     /*couleur de la police du bouton*/
-    font-size: 16px;
+    font-size: 14px;
     /*le curseur devient une 'tite main sur le bouton*/
     cursor: pointer;
     border-radius: 40px;
 }
 
-.taskList {
-    border: dashed rgb(197, 228, 44);
+#category {
+    width: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background: #fff;
+    outline: none;
+    margin-bottom: 2px;
+    box-shadow: inset 0.5px 0.5px 8px rgb(209, 206, 206);
+    /*ombre interne*/
+    font-size: 12px;
+}
+
+.task-category {
+    color: #888888;
+    /* gris */
+    margin-left: 6px;
+    margin-right: 12px;
+    font-size: 9px;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.input-group {
+    display: flex;
+    /* empile verticalement input/bouton et select */
+    flex-direction: column;
+    align-items: flex-start;
+    /* espace entre les deux */
+    gap: 5px;
+
+    /* border: dashed rgb(205, 230, 22); */
     /* A ENLEVER*/
+}
+
+#list-container {
+    max-height: 260px;
+    overflow-y: auto;
+    /* scroll vertical si beaucoup d'items/long textes */
+    overflow-x: hidden;
+    padding-right: 6px;
+    /* évite qu'un scroll cache le contenu */
 }
 
 ul li {
     list-style: none;
     /*enlève les puces */
-    font-size: 17px;
+    font-size: 12px;
     padding: 12px 50px 12px 50px;
     /*empèche la sélection du texte*/
     user-select: none;
     cursor: pointer;
     /*L’espace initial de li est conservé (comme un fantôme); sert de repère à ses enfants en absolute*/
     position: relative;
-    overflow-wrap: break-word;
+
+    word-wrap: break-word;
+    /* casse les mots trop longs */
+    overflow-wrap: anywhere;
+    /* permet de couper si besoin */
 }
 
 /*::before cré une boite virtuelle dans laquelle sera stockée l'image*/
@@ -224,25 +345,83 @@ ul li span:hover {
     background: #edeef0;
 }
 
-.completedTask ul li span {
-    position: absolute;
-    right: 10px;
-    top: 11px;
-    width: 21px;
-    height: 21px;
-    font-size: 18px;
-    color: #555;
-    /*controle l'interligne (hauteur de ligne)*/
-    line-height: 19px;
-    text-align: center;
-    /*le background de '×' est circulaire*/
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --- Pour afficher task / catégorie sur deux lignes dans le bloc Done --- */
+.completedTask .done-list ul li {
+    display: flex;
+    /* on garde flex pour l'alignement de la croix absolue */
+    flex-direction: column;
+    /* empile verticalement : texte puis catégorie */
+    align-items: flex-start;
+    /* aligne le texte à gauche */
+    gap: 6px;
+    /* petit espacement entre la tâche et la catégorie */
+    padding: 10px 20px 10px 50px;
+    /* haut droite bas gauche : laisse de l'espace à la coche */
+    white-space: normal;
+    /* autorise le retour à la ligne */
+    word-break: break-word;
+    /* coupe les mots trop longs */
+    position: relative;
+    /* pour que ::before continue à se positionner correctement */
+}
+
+/* garde la coche au même endroit */
+.completedTask .done-list ul li::before {
+    top: 12px;
+    left: 8px;
+    width: 20px;
+    height: 20px;
+    background-size: 20px 20px;
+}
+
+/*.task-category est ajouté avec JS*/
+.completedTask .done-list ul li .task-category {
+    display: block;
+    /* prendra toute la largeur disponible et forcera les éléments suivants à aller à la ligne */
+    margin: 0;
+    padding-left: 0;
+    font-size: 9px;
+    color: #888888;
+    font-style: italic;
+    opacity: 0.9;
+}
+
+/* la catégorie est légèrement décalé par rapport au texte principal */
+.completedTask .done-list ul li .task-category.indent {
+    margin-left: 6px;
+}
+
+/* Ajustement du bouton × dans le bloc Done  */
+.completedTask .done-list ul li span {
+    top: 50%;
+    /* le centre vertical du li */
+    transform: translateY(-50%);
+    /* pour le centrer parfaitement */
+    right: 6px;
+    /* légèrement plus près du bord */
+    width: 24px;
+    /* plus petit */
+    height: 24px;
+    /* plus petit */
+    font-size: 16px;
+    /* réduit la taille du “×” */
+    line-height: 24px;
+    /* garde un bon centrage vertical */
+    color: #777;
+    background: transparent;
+    /* pas de fond visible par défaut */
     border-radius: 50%;
+    /* garde la forme arrondie */
 
 }
 
-/* 
-voici mon code css:
 
-je veux que .completedTask et 
-
- */
+.completedTask .done-list ul li span:hover {
+    background: #f1f1f1;
+}
