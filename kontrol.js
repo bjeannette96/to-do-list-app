@@ -28,7 +28,7 @@ function addTask() {
     cat.textContent = `(${categoryText})`;
     li.appendChild(cat);
 
-    // bouton supprimer (la croix ×)
+    // bouton supprimer (la croix ×) hahaha
     const span = document.createElement("span");
     span.innerHTML = "\u00d7";
     li.appendChild(span);
