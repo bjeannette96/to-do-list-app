@@ -7,7 +7,7 @@ function addTask() {
     // .trim() les espaces vides + vérifie le input
     const text = inputBox.value.trim();
     if (text === '') {
-        showWarning("⚠️ Please write something!");
+        showWarning("Please write something!");
         return;
     }
 
@@ -28,9 +28,16 @@ function addTask() {
     cat.textContent = `(${categoryText})`;
     li.appendChild(cat);
 
-    // bouton supprimer (la croix ×) hahaha
+    // bouton supprimer (la croix ×) 
     const span = document.createElement("span");
     span.innerHTML = "\u00d7";
+    span.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        li.remove();
+        saveData();
+    });
+
+    span.dataset.deleteListener = "1";
     li.appendChild(span);
 
     // ajoute le <li> à la liste
@@ -43,6 +50,80 @@ function addTask() {
     saveData();
 }
 
+listContainer.addEventListener("click", function (e) {
+    if (e.target.tagName === "LI") {
+        // Si la tâche n'est pas encore cochée, la déplacer dans "Done"
+        if (!e.target.classList.contains("checked")) {
+            e.target.classList.add("checked");
+            doneList.appendChild(e.target);  // Déplace dans Done           
+        } else {
+            e.target.classList.remove("checked");
+            listContainer.appendChild(e.target);  // Rapatrie dans la liste principale
+
+            // Ajoute un gestionnaire pour la suppression dans TaskToAdd
+            let span = e.target.querySelector("span");
+            span.addEventListener("click", function () {
+                e.target.remove();  // Supprime l'élément li
+                saveData();   // Sauvegarde l'état après suppression
+            });
+        }
+        saveData();  // Sauvegarde l'état après le déplacement de la tâche
+    }
+    else if (e.target.tagName === "SPAN") {
+        e.target.parentElement.remove();  // Supprime le parent (li) quand on clique sur la croix
+        saveData();  // Sauvegarde l'état après suppression
+    }
+}, false);
+
+
+
+
+//la fonction ajoute une tache à la liste lorsqu'on appuis Enter
+inputBox.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') addTask();
+});
+
+
+function saveData() {
+    try {
+        localStorage.setItem("data", listContainer.innerHTML);
+        localStorage.setItem("doneTasks", doneList.innerHTML);
+    } catch (err) {
+        console.error("Erreur de sauvegarde localStorage :", err);
+        showWarning("Sauvegarde impossible (stockage plein ou désactivé)");
+    }
+}
+
+//reconnecter les croix “×” pour qu’elles refonctionnent après rechargement.
+function reattachDeleteListeners() {
+    const spans = document.querySelectorAll('#list-container span, #done-list span');
+    spans.forEach(span => {
+        // si on a déjà attaché un listener, on skip
+        if (span.dataset.deleteListener === "1") return;
+        const li = span.closest('li');
+        if (!li) return;
+        span.addEventListener('click', function (ev) {
+            ev.stopPropagation();
+            li.remove();
+            saveData();
+        });
+        span.dataset.deleteListener = "1";
+    });
+}
+
+//Recharge les listes depuis le localStorage pour que les tâches réapparaissent à l’ouverture de la page
+function showTask() {
+    const savedTasks = localStorage.getItem("data");
+    const savedDone = localStorage.getItem("doneTasks");
+
+    if (savedTasks) listContainer.innerHTML = savedTasks;
+    if (savedDone) doneList.innerHTML = savedDone;
+
+    // réattacher les listeners delete aux spans restaurés
+    reattachDeleteListeners();
+}
+
+showTask();
 
 
 let __warningTimeout = null;
@@ -94,67 +175,3 @@ function showWarning(msg) {
         }, 500);
     }, 2000);
 }
-
-listContainer.addEventListener("click", function (e) {
-    if (e.target.tagName === "LI") {
-        // Si la tâche n'est pas encore cochée, la déplacer dans "Done"
-        if (!e.target.classList.contains("checked")) {
-            e.target.classList.add("checked");
-            doneList.appendChild(e.target);  // Déplace dans Done
-
-            // Ajoute un gestionnaire pour la suppression dans Done
-            let span = e.target.querySelector("span");
-            span.addEventListener("click", function () {
-                e.target.remove();  // Supprime l'élément li
-                saveData();   // Sauvegarde l'état après suppression
-            });
-
-        } else {
-            e.target.classList.remove("checked");
-            listContainer.appendChild(e.target);  // Rapatrie dans la liste principale
-
-            // Ajoute un gestionnaire pour la suppression dans TaskToAdd
-            let span = e.target.querySelector("span");
-            span.addEventListener("click", function () {
-                e.target.remove();  // Supprime l'élément li
-                saveData();   // Sauvegarde l'état après suppression
-            });
-        }
-        saveData();  // Sauvegarde l'état après le déplacement de la tâche
-    }
-    else if (e.target.tagName === "SPAN") {
-        e.target.parentElement.remove();  // Supprime le parent (li) quand on clique sur la croix
-        saveData();  // Sauvegarde l'état après suppression
-    }
-}, false);
-
-
-
-
-//la fonction ajoute une tache à la liste lorsqu'on appuis Enter
-inputBox.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') addTask();
-});
-
-
-function saveData() {
-    localStorage.setItem("data", listContainer.innerHTML);
-    localStorage.setItem("doneTasks", doneList.innerHTML);
-}
-
-function showTask() {
-    const savedTasks = localStorage.getItem("data");
-    const savedDone = localStorage.getItem("doneTasks");
-
-    if (savedTasks) listContainer.innerHTML = savedTasks;
-    if (savedDone) doneList.innerHTML = savedDone;
-
-}
-showTask();
-
-
-
-/**
- * 
- */
-
