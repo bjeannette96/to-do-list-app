@@ -15,16 +15,32 @@
             <h2>To-Do List <img src="images/icon.png" alt="icône"></h2>
             <div class="todo-bloc">
                 <div class="completedTask">
-                    <h3>Done</h3>
-                    <ul id="done-list"></ul>
-                </div>
-                <div class="taskToAdd">
-                    <div class="row">
-                        <input type="text" id="input-box" placeholder="Add your task">
-                        <button onclick="addTask()">Add</button>
-                        <!-- l'attribut 'onclick' appelle une fonction JS lorsqu'on clique sur le bouton -->
-                    </div class="taskList">
+                    <div class="done-header">
+                        <h3>Done !</h3>
+                    </div>
+                    <div class="done-list">
+                        <ul id="done-list"></ul>
+                    </div>
 
+                </div>
+                <!-- <hr class="line"> -->
+                <!-- <div id="line">    </div>   -->
+
+                <div class="taskToAdd">
+                    <div class="input-group">
+                        <div class="row">
+                            <input type="text" id="input-box" placeholder="Add your task">
+
+                            <!-- l'attribut 'onclick' appelle une fonction JS lorsqu'on clique sur le bouton -->
+                        </div>
+                        <select name="categorie" id="category">
+                            <option value="Urgent-Important">Urgent et important </option>
+                            <option value="Urgent-Not-Important">Urgent non important</option>
+                            <option value="Important-Not-Urgent">Important non urgent</option>
+                            <option value="Not-Urgent-Not-Important">Ni urgent ni important</option>
+                        </select>
+                        <button onclick="addTask()">Add</button>
+                    </div>
                     <ul id="list-container"> <!--une liste à puces non ordonnée-->
                         <!-- <li class="checked">Task 1</li>
                 <li>Task 2</li>
