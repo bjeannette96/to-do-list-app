@@ -4,7 +4,6 @@ Une application web simple pour **ajouter, organiser et suivre les tâches quoti
 Elle fonctionne entièrement **en local**, grâce au **LocalStorage**, sans connexion Internet ni base de données externe.  
 Développée en **HTML, CSS et JavaScript** sous **Visual Studio Code**.
 
-
 ## Aperçu du projet
 
 ### Interface principale
@@ -55,7 +54,13 @@ Aucune connexion Internet n’est requise, tout fonctionne en local.
 
 - **HTML5** — structure et squelettes de la page  
 - **CSS3** — design et visuel (gradients, ombres, transitions)  
-- **JavaScript (ES6)** — logique, gestion des événements, stockage local, affichage dynamique  
+- **JavaScript (ES6)** — logique, gestion des événements, stockage local, affichage dynamique
+
+## 🚀 Déploiement en ligne
+L'application est disponible ici 👉 [To-Do List App sur Vercel](https://to-do-list-app-76rd.vercel.app/)
+
+Chaque mise à jour du code sur la branche **`main`** déclenche automatiquement un nouveau déploiement sur **Vercel**.
+
 
 ## Améliorations futures
 
